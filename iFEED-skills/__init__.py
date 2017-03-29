@@ -17,6 +17,7 @@
 
 from os.path import dirname
 import requests
+import websocket
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
@@ -28,33 +29,26 @@ __author__ = 'bang'
 LOGGER = getLogger(__name__)
 
 
-class VASSARSkill(MycroftSkill):
+class IFEEDSkill(MycroftSkill):
 
     def __init__(self):
-        super(VASSARSkill, self).__init__(name="VASSARSkill")
+        super(IFEEDSkill, self).__init__(name="IFEEDSkill")
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
         
-        eval_arch_intent = IntentBuilder("EvalArchIntent").\
-            require("EvalArchKeyword").build()
-        self.register_intent(eval_arch_intent, self.handle_eval_arch_intent)
+        apply_filter_intent = IntentBuilder("ApplyFilterIntent").\
+            require("ApplyFilterKeyword").build()
+        self.register_intent(apply_filter_intent, self.handle_apply_filter_intent)
 
-        initialize_jess_intent = IntentBuilder("InitializeJessIntent").\
-            require("InitializeJessKeyword").build() 
-        self.register_intent(initialize_jess_intent, self.handle_initialize_jess_intent)
-        
-        
-        
 
-    def handle_eval_arch_intent(self, message):
-        arch = requests.post('http://10.0.2.2:8080/server/vassar/', data={'ID':'evaluate_architecture'})
-        self.speak_dialog("eval.arch",arch)
+
+    def handle_apply_filter_intent(self, message):
+        ws = websocket.create_connection("ws://10.0.2.2:8001/server/")
+        ws.send("apply_pareto_filter")
+        self.speak_dialog("apply.filter")
         
 
-    def handle_initialize_jess_intent(self, message):
-        r = requests.post('http://10.0.2.2:8080/server/vassar/', data={'ID':'initialize_jess'})
-        self.speak_dialog("initialize.jess")
 
     def stop(self):
         pass

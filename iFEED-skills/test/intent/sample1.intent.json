@@ -1,7 +1,7 @@
 {
-  "utterance": "initialize jess",
-  "intent_type": "InitializeJessIntent",
+  "utterance": “apply filter”,
+  "intent_type": “ApplyFilterIntent”,
   "intent": {
-    "InitializeJessKeyword": "initialize jess"
+    “ApplyFilterKeyword”: “Apply filter”
   }
 }

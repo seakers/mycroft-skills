@@ -1,7 +1,0 @@
-{
-  "utterance": "evaluate test architecture",
-  "intent_type": "EvalArchIntent",
-  "intent": {
-    "EvalArchKeyword": "evaluate test architecture"
-  }
-}
