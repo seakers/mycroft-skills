@@ -1,0 +1,7 @@
+{
+  "utterance": "initialize jess",
+  "intent_type": "InitializeJessIntent",
+  "intent": {
+    "InitializeJessKeyword": "initialize jess"
+  }
+}
