@@ -29,10 +29,10 @@ __author__ = 'bang'
 LOGGER = getLogger(__name__)
 
 
-class IFEEDSkill(MycroftSkill):
+class iFEEDSkill(MycroftSkill):
 
     def __init__(self):
-        super(IFEEDSkill, self).__init__(name="IFEEDSkill")
+        super(iFEEDSkill, self).__init__(name="iFEEDSkill")
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
@@ -55,4 +55,4 @@ class IFEEDSkill(MycroftSkill):
 
 
 def create_skill():
-    return VASSARSkill()
+    return iFEEDSkill()
