@@ -21,16 +21,20 @@ import requests
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
+from mycroft.configuration import ConfigurationManager
 
 __author__ = 'bang'
 
 LOGGER = getLogger(__name__)
-
+config = ConfigurationManager.get().get("daphne").get("http")
 
 class VASSARSkill(MycroftSkill):
 
     def __init__(self):
+        port = config.get("port")
+        host = config.get("host")
+        route = "/server/vassar/"
+        self.url = "http://" + host + ":" + str(port) + route
         super(VASSARSkill, self).__init__(name="VASSARSkill")
 
     def initialize(self):
@@ -48,12 +52,12 @@ class VASSARSkill(MycroftSkill):
         
 
     def handle_eval_arch_intent(self, message):
-        arch = requests.post('http://10.0.2.2:8080/server/vassar/', data={'ID':'evaluate_architecture'})
-        self.speak_dialog("eval.arch",arch)
+        resp = requests.post(self.url + "evaluate-architecture/")
+        self.speak_dialog("eval.arch",resp.json())
         
 
     def handle_initialize_jess_intent(self, message):
-        r = requests.post('http://10.0.2.2:8080/server/vassar/', data={'ID':'initialize_jess'})
+        r = requests.post(self.url + "initialize-jess/")
         self.speak_dialog("initialize.jess")
 
     def stop(self):

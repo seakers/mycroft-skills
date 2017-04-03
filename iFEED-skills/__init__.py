@@ -17,21 +17,24 @@
 
 from os.path import dirname
 import requests
-import websocket
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
+from mycroft.configuration import ConfigurationManager
 
 __author__ = 'bang'
 
 LOGGER = getLogger(__name__)
-
+config = ConfigurationManager.get().get("daphne").get("http")
 
 class iFEEDSkill(MycroftSkill):
 
     def __init__(self):
+        port = config.get("port")
+        host = config.get("host")
+        route = "/server/ifeed/"
+        self.url = "http://" + host + ":" + str(port) + route
         super(iFEEDSkill, self).__init__(name="iFEEDSkill")
 
     def initialize(self):
@@ -41,13 +44,16 @@ class iFEEDSkill(MycroftSkill):
             require("ApplyFilterKeyword").build()
         self.register_intent(apply_filter_intent, self.handle_apply_filter_intent)
 
-
+        cancel_selections_intent = IntentBuilder("CancelSelectionsIntent").\
+            require("CancelSelectionsKeyword").build()
+        self.register_intent(cancel_selections_intent, self.handle_cancel_selections_intent)
 
     def handle_apply_filter_intent(self, message):
-        ws = websocket.create_connection("ws://10.0.2.2:8001/server/")
-        ws.send("apply_pareto_filter")
+        r = requests.post(self.url + "apply-filter/")
         self.speak_dialog("apply.filter")
-        
+    def handle_cancel_selections_intent_intent(self, message):
+        r = requests.post(self.url + "cancel-selections/")
+        self.speak_dialog("cancel.selections")
 
 
     def stop(self):

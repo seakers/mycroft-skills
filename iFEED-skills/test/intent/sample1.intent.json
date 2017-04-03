@@ -1,7 +1,0 @@
-{
-  "utterance": “apply filter”,
-  "intent_type": “ApplyFilterIntent”,
-  "intent": {
-    “ApplyFilterKeyword”: “Apply filter”
-  }
-}
